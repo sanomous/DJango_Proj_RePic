@@ -1,0 +1,110 @@
+{% extends 'reapp/base.html' %}
+{% load static %}
+
+{% block title %}Add Product | RePic{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="text-center mb-4 fw-bold">POST YOUR AD</h3>
+                    
+                    <!-- Category Info Display -->
+                    <div class="alert alert-info mb-4">
+                        <strong>Selected Category:</strong> 
+                        <span id="selectedCategory">{{ request.GET.category|default:"Not selected" }}</span>
+                        {% if request.GET.subcategory %}
+                        <br><strong>Selected Subcategory:</strong> 
+                        <span id="selectedSubcategory">{{ request.GET.subcategory }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Product Form -->
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="title" class="form-label fw-bold">Title *</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label fw-bold">Price *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    <input type="number" class="form-control" id="price" name="price" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="condition" class="form-label fw-bold">Condition *</label>
+                                <select class="form-select" id="condition" name="condition" required>
+                                    <option value="">Select condition</option>
+                                    <option value="new">New</option>
+                                    <option value="like_new">Like New</option>
+                                    <option value="good">Good</option>
+                                    <option value="fair">Fair</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="brand" class="form-label fw-bold">Brand</label>
+                                <input type="text" class="form-control" id="brand" name="brand">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label fw-bold">Location *</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="images" class="form-label fw-bold">Upload Images</label>
+                            <input type="file" class="form-control" id="images" name="images" multiple accept="image/*">
+                            <div class="form-text">You can upload multiple images. Maximum 5 images allowed.</div>
+                        </div>
+
+                        <!-- Hidden fields for category and subcategory -->
+                        <input type="hidden" name="category" value="{{ request.GET.category }}">
+                        <input type="hidden" name="subcategory" value="{{ request.GET.subcategory }}">
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'post_ad' %}" class="btn btn-outline-secondary me-md-2">Back</a>
+                            <button type="submit" class="btn btn-primary">Post Ad</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update the category display with proper formatting
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySpan = document.getElementById('selectedCategory');
+    const subcategorySpan = document.getElementById('selectedSubcategory');
+    
+    if (categorySpan && categorySpan.textContent !== 'Not selected') {
+        // Format the category name for better display
+        const category = categorySpan.textContent;
+        const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+        categorySpan.textContent = formattedCategory;
+    }
+    
+    if (subcategorySpan) {
+        // Format the subcategory name for better display
+        const subcategory = subcategorySpan.textContent;
+        const formattedSubcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
+        subcategorySpan.textContent = formattedSubcategory;
+    }
+});
+</script>
+{% endblock %} 

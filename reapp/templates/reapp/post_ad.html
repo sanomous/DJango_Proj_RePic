@@ -1,0 +1,101 @@
+{% extends 'reapp/base.html' %}
+{% block title %}Post Your Ad | RePic{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="text-center mb-4 fw-bold">POST YOUR AD</h3>
+                    <div class="mb-4 text-center">
+                        <span class="fw-bold">CHOOSE A CATEGORY</span>
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-center gap-3 mb-4" id="mainCategories">
+                        <button class="btn btn-outline-primary category-btn" data-category="mobile">Mobile Phones</button>
+                        <button class="btn btn-outline-primary category-btn" data-category="furniture">Furniture</button>
+                        <button class="btn btn-outline-primary category-btn" data-category="electronics">Electronics & Appliances</button>
+                        <button class="btn btn-outline-primary category-btn" data-category="fashion">Fashion</button>
+                        <button class="btn btn-outline-primary category-btn" data-category="books">Books, Sports & Hobbies</button>
+                        <button class="btn btn-outline-primary category-btn" data-category="pets">Pets</button>
+                    </div>
+                    <div id="subCategories" class="text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const categories = {
+    mobile: {
+        name: 'Mobile Phones',
+        subs: [
+            'Mobile Phones',
+            'Accessories',
+            'Tablets'
+        ]
+    },
+    furniture: {
+        name: 'Furniture',
+        subs: [
+            'Sofa & Dining',
+            'Beds & Wardrobes',
+            'Home Decor & Garden',
+            'Kids Furniture',
+            'Other Household Items'
+        ]
+    },
+    electronics: {
+        name: 'Electronics & Appliances',
+        subs: [
+            'TVs, Video - Audio',
+            'Kitchen & Other Appliances',
+            'Computers & Laptops',
+            'Cameras & Lenses',
+            'Games & Entertainment'
+        ]
+    },
+    fashion: {
+        name: 'Fashion',
+        subs: [
+            'Men',
+            'Women',
+            'Kids'
+        ]
+    },
+    books: {
+        name: 'Books, Sports & Hobbies',
+        subs: [
+            'Books',
+            'Gym & Fitness',
+            'Musical Instruments',
+            'Sports Equipment',
+            'Other Hobbies'
+        ]
+    },
+    pets: {
+        name: 'Pets',
+        subs: [
+            'Fishes & Aquarium',
+            'Pet Food & Accessories',
+            'Dogs',
+            'Other Pets'
+        ]
+    }
+};
+
+const subCategoriesDiv = document.getElementById('subCategories');
+document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const cat = this.getAttribute('data-category');
+        const subs = categories[cat].subs;
+        let html = `<div class='mb-3'><span class='fw-bold'>${categories[cat].name}</span></div>`;
+        html += '<div class="d-flex flex-wrap justify-content-center gap-2">';
+        subs.forEach(sub => {
+            html += `<a href="{% url 'add_product' %}?category=${encodeURIComponent(cat)}&subcategory=${encodeURIComponent(sub)}" class="btn btn-outline-secondary">${sub}</a>`;
+        });
+        html += '</div>';
+        subCategoriesDiv.innerHTML = html;
+    });
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RePic - Marketplace{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'reapp/css/styles2.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .navbar, .navbar-nav .nav-link, .dropdown-menu, .dropdown-item, .form-select, .form-control, .btn, .search-bar-rotator {
+            font-size: 0.98rem !important;
+        }
+        .navbar-nav .nav-link, .dropdown-item, .dropdown-menu a {
+            color: #222 !important;
+            transition: color 0.2s, background 0.2s;
+        }
+        .navbar-nav .nav-link:hover, .dropdown-item:hover, .dropdown-menu a:hover {
+            color: #23e5db !important;
+            background: #f5f5f5 !important;
+        }
+        .navbar, .navbar-nav, .dropdown-menu, .dropdown-item, .form-select, .form-control, .btn {
+            padding-top: 0.25rem !important;
+            padding-bottom: 0.25rem !important;
+        }
+        .navbar .container-fluid, .navbar .dropdown-menu {
+            padding-top: 0.2rem !important;
+            padding-bottom: 0.2rem !important;
+        }
+        .dropdown-menu {
+            font-size: 0.95rem !important;
+        }
+        .dropdown-menu h6 {
+            font-size: 1rem !important;
+        }
+        .dropdown-menu ul {
+            margin-bottom: 0.5rem !important;
+        }
+        .dropdown-menu li {
+            margin-bottom: 0.15rem !important;
+        }
+        .form-select, .form-control {
+            height: 36px !important;
+            font-size: 0.98rem !important;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #23e5db 60%, #fff 100%) !important;
+            color: #002f34 !important;
+            border: 2px solid #23e5db !important;
+        }
+        .btn-primary:hover {
+            background: #23e5db !important;
+            color: #fff !important;
+        }
+        .dropdown-toggle::after {
+            font-size: 0.8em;
+        }
+        .search-bar-rotator {
+            font-size: 1rem !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="py-2 border-bottom bg-white sticky-top shadow-sm">
+        <div class="container-fluid d-flex flex-wrap align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <a href="{% url 'base' %}" class="logo text-decoration-none d-flex align-items-center">
+                    <img src="{% static 'reapp/img/logoW.png' %}" alt="RePic Logo" style="height: 60px;">
+                </a>
+                <div class="ms-3 d-none d-md-block">
+                    <select class="form-select form-select-sm" style="width: 140px;">
+                        <option>India</option>
+                        <option>Delhi</option>
+                        <option>Mumbai</option>
+                        <option>Bangalore</option>
+                    </select>
+                </div>
+            </div>
+            <form class="d-none d-md-flex flex-grow-1 mx-4" style="max-width: 600px;">
+                <input class="form-control search-bar-rotator" id="searchInput" type="text" placeholder="Search &quot;Properties&quot;" style="height: 36px; font-size: 1rem;">
+                <button class="btn btn-outline-secondary ms-2" type="submit" style="height: 36px; padding: 0 14px;"><i class="fas fa-search"></i></button>
+            </form>
+            <div class="d-flex align-items-center gap-2">
+                <a href="#" class="btn btn-link text-dark"><i class="far fa-heart"></i></a>
+                <a href="#" class="btn btn-link text-dark"><i class="far fa-comment"></i></a>
+                <a href="#" class="btn btn-link text-dark"><i class="far fa-bell"></i></a>
+                <a href="{% url 'post_ad' %}" class="btn btn-primary fw-bold px-4 py-2 ms-2" style="border-radius: 2rem; background: linear-gradient(90deg, #23e5db 60%, #fff 100%); color: #002f34; border: 2px solid #23e5db; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(35,229,219,0.08);">
+                    <i class="fas fa-plus"></i> SELL
+                </a>
+                <div class="dropdown ms-2">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img id="profileImagePreview" src="{% if profile_picture_base64 %}data:image/jpeg;base64,{{ profile_picture_base64 }}{% else %}{% static 'reapp/img/default_profile.jpg' %}{% endif %}" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #23e5db;">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">View and edit profile</a></li>
+                        <li><a class="dropdown-item" href="#">My ADS</a></li>
+                        <li><a class="dropdown-item" href="#">About</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'home' %}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Category Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white py-1 border-bottom">
+        <div class="container-fluid">
+            <div class="dropdown me-3">
+                <button class="btn btn-link nav-link dropdown-toggle fw-bold" type="button" id="allCategoriesDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="color: #002f34;">
+                    ALL CATEGORIES
+                </button>
+                <div class="dropdown-menu p-4" aria-labelledby="allCategoriesDropdown" style="min-width: 700px;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            
+                            <h6 class="fw-bold">Mobile Phones</h6>
+                            <ul class="list-unstyled mb-3">
+                                <li><a href="#">Mobile Phones</a></li>
+                                <li><a href="#">Accessories</a></li>
+                                <li><a href="#">Tablets</a></li>
+                            </ul>
+                            <h6 class="fw-bold">Furniture</h6>
+                            <ul class="list-unstyled mb-3">
+                                <li><a href="#">Sofa & Dining</a></li>
+                                <li><a href="#">Beds & Wardrobes</a></li>
+                                <li><a href="#">Home Decor & Garden</a></li>
+                                <li><a href="#">Kids Furniture</a></li>
+                                <li><a href="#">Other Household Items</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="fw-bold">Electronics & Appliances</h6>
+                            <ul class="list-unstyled mb-3">
+                                <li><a href="#">TVs, Video - Audio</a></li>
+                                <li><a href="#">Kitchen & Other Appliances</a></li>
+                                <li><a href="#">Computers & Laptops</a></li>
+                                <li><a href="#">Cameras & Lenses</a></li>
+                                <li><a href="#">Games & Entertainment</a></li>
+                            </ul>
+                            <h6 class="fw-bold">Fashion</h6>
+                            <ul class="list-unstyled mb-3">
+                                <li><a href="#">Men</a></li>
+                                <li><a href="#">Women</a></li>
+                                <li><a href="#">Kids</a></li>
+                            </ul>
+                            
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="fw-bold">Books, Sports & Hobbies</h6>
+                            <ul class="list-unstyled mb-3">
+                                <li><a href="#">Books</a></li>
+                                <li><a href="#">Gym & Fitness</a></li>
+                                <li><a href="#">Musical Instruments</a></li>
+                                <li><a href="#">Sports Equipment</a></li>
+                                <li><a href="#">Other Hobbies</a></li>
+                            </ul>
+                            <h6 class="fw-bold">Pets</h6>
+                            <ul class="list-unstyled mb-3">
+                                <li><a href="#">Fishes & Aquarium</a></li>
+                                <li><a href="#">Pet Food & Accessories</a></li>
+                                <li><a href="#">Dogs</a></li>
+                                <li><a href="#">Other Pets</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#categoriesNavbar" aria-controls="categoriesNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="categoriesNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#">Electronics & Appliances</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Mobile Phones</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Furniture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Fashion</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Pets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Books, Sports & Hobbies</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="min-vh-100" style="background-color: #f5f5f5;">
+        <!-- Messages -->
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Latest Ad Banner -->
+        {% if latest_ad %}
+        <div class="container mt-3">
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+                <div>
+                    <strong>Latest Ad:</strong> {{ latest_ad.title }}<br>
+                    <span>Price: ₹{{ latest_ad.price }}</span><br>
+                    <span>{{ latest_ad.description|truncatechars:80 }}</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% block recommendations %}{% endblock %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-4 bg-white border-top shadow-sm">
+        <div class="container text-center">
+            <ul class="list-inline mb-2">
+                <li class="list-inline-item"><a href="#">Help</a></li>
+                <li class="list-inline-item"><a href="#">About Us</a></li>
+                <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                <li class="list-inline-item"><a href="#">Terms of Use</a></li>
+            </ul>
+            <p class="mb-0">© 2023 RePic - University Marketplace</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Rotating placeholder for search bar
+        const categories = [
+            'Electronics & Appliances',
+            'Mobile Phones',
+            'Furniture',
+            'Fashion',
+            'Pets',
+            'Books, Sports & Hobbies'
+        ];
+        let catIdx = 0;
+        function rotatePlaceholder() {
+            const input = document.getElementById('searchInput');
+            if (input) {
+                input.placeholder = 'Search "' + categories[catIdx] + '"';
+                catIdx = (catIdx + 1) % categories.length;
+            }
+        }
+        setInterval(rotatePlaceholder, 4500);
+        document.addEventListener('DOMContentLoaded', function() {
+            rotatePlaceholder();
+        });
+    </script>
+</body>
+</html>
